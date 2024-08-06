@@ -1,9 +1,17 @@
+import time
+
 import streamlit as st
 from openai import OpenAI
 from transformers import pipeline
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
+def stream_text(text):
+    for word in text.split():
+        yield word + " "
+        time.sleep(0.4)
+
+st.caption("Ask the AI questions about the image. E.g. 'Please describe the image.'")
 audio = st.audio_input(label="Test")
 pipe = pipeline("automatic-speech-recognition", "openai/whisper-tiny")
 
@@ -38,8 +46,6 @@ if audio and image_url:
 
     text = response.choices[0].message.content
 
-    st.caption(text)
-
     tts = client.audio.speech.create(
         model="tts-1",
         voice="alloy",
@@ -50,3 +56,4 @@ if audio and image_url:
 
     st.caption("AI response")
     st.audio("audio1.mp3", autoplay=True)
+    st.write_stream(stream_text(text))

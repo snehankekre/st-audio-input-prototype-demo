@@ -4,6 +4,7 @@ from transformers import pipeline
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
+st.caption("Record some audio and it will be transcribed.")
 audio = st.audio_input(label="Record some audio to transcribe")
 pipe = pipeline("automatic-speech-recognition", "openai/whisper-tiny")
 
