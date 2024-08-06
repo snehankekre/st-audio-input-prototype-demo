@@ -15,15 +15,12 @@ if audio:
     transcription = pipe(audio.getvalue())
     st.write(transcription)
 
-    # join the history and feed it to the content
     history = '\n'.join([f"{i['role']}: {i['content']}" for i in st.session_state.history])
-    st.write(history)
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a helpful assistant who is a Streamlit expert. You are helping a user with a Streamlit app. Respond with raw, valid, Python Streamlit code. DO NOT include any discussion or explanation. Just the code. Do not format as markdown."},
-            #join the history and feed it to the content
             {"role": "assistant", "content": history},
             {"role": "user", "content": transcription["text"]},
         ],
@@ -35,5 +32,7 @@ if audio:
 
     with st.expander("View generated code", icon=":material/terminal:"):
         st.code(code)
+        # Use st.download_button to download the code as a .py file
+        st.download_button("Download code", code, "generated_code.py", "text/plain")
 
     exec(code)
