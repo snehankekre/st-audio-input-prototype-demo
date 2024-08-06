@@ -1,7 +1,4 @@
 import streamlit as st
 
-
-audio = st.audio_input(label="todo")
-
-if audio:
-    st.audio(audio)
+pg = st.navigation([st.Page("basic.py"), st.Page("transcribe.py"), st.Page("translation.py"), st.Page("builder.py")])
+pg.run()
